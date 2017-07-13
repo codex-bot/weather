@@ -1,6 +1,6 @@
-# Notify plugin for CodeX Bot platform
+# Weather plugin for CodeX Bot platform
 
-Allow you send messages to chat
+Allow you to be informed about weather conditions in your region via Telegram chat
 
 ## CodeX Team
 
