@@ -19,7 +19,9 @@ class Weather:
             ('weather_help', 'help', CommandHelp(self.sdk)),
             ('weather', 'weather', CommandWeather(self.sdk)),
             ('cities', 'cities', CommandCities(self.sdk)),
-            ('city', 'city', CommandCity(self.sdk))
+            ('city', 'city', CommandCity(self.sdk)),
+            ('rain3', 'rain3', CommandWeather(self.sdk)),
+            ('rain10', 'rain10', CommandWeather(self.sdk))
         ])
 
         self.sdk.set_routes([])
