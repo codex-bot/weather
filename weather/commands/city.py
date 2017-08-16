@@ -1,4 +1,4 @@
-from weather.config import CITIES_COLLECTION_NAME
+from config import CITIES_COLLECTION_NAME
 from .base import CommandBase
 
 

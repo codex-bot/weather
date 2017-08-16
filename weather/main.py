@@ -2,9 +2,9 @@ from commands.help import CommandHelp
 from sdk.codexbot_sdk import CodexBot
 from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, URL, SERVER
 
-from weather.commands.cities import CommandCities
-from weather.commands.city import CommandCity
-from weather.commands.weather import CommandWeather
+from commands.cities import CommandCities
+from commands.city import CommandCity
+from commands.weather import CommandWeather
 
 
 class Weather:

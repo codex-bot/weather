@@ -2,7 +2,7 @@ import requests
 import emoji
 from datetime import datetime
 
-from weather.config import CITIES_COLLECTION_NAME, OPENWEATHER_API_KEY
+from config import CITIES_COLLECTION_NAME, OPENWEATHER_API_KEY
 from .base import CommandBase
 
 
