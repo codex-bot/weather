@@ -8,7 +8,13 @@ from .base import CommandBase
 
 class CommandWeather(CommandBase):
 
-    def parse_weather_condition(self, desc):
+    @staticmethod
+    def parse_weather_condition(desc):
+        """
+        Translate weather description to emoji.
+        :param desc: weather condition
+        :return: unicode emoji
+        """
         cond = {
             'clear sky': ':sun:',
             'few clouds': ':partly_sunny:',
@@ -33,10 +39,11 @@ class CommandWeather(CommandBase):
 
     def load_forecast(self, city_id, period, daily=''):
         """
-
+        Load forecast for period specified.
         :param city_id: City ID according to the http://bulk.openweathermap.org/sample/city.list.json.gz
-        :param period: Number of 3-hour intervals. period=8 for a day, period=40 for 5 days.
-        :return: None or <tuple>(<Dict> City info, <List> forecasts for each 3-hour period).
+        :param period: Number of 3-hour or daily intervals.
+        :param daily: Empty for 3-hour intervals and '/daily' for daily intervals.
+        :return: None or <tuple>(<Dict> City info, <List> forecasts for each period).
         """
         try:
             response = requests.get("http://api.openweathermap.org/data/2.5/forecast{}?id={}&appid={}&cnt={}".format(
@@ -56,6 +63,11 @@ class CommandWeather(CommandBase):
         return None
 
     def get_daily_forecast(self, city_id):
+        """
+        Return message with forecast for the next 9 hours.
+        :param city_id: City ID according to the http://bulk.openweathermap.org/sample/city.list.json.gz
+        :return: message for Telegram
+        """
         city_info, forecast = self.load_forecast(city_id, 8)
         data = []
         for weather in forecast[:4]:
@@ -81,6 +93,12 @@ class CommandWeather(CommandBase):
         return message
 
     def get_weekly_forecast(self, city_id, days):
+        """
+        Return message with forecast for the next $days days.
+        :param city_id: City ID according to the http://bulk.openweathermap.org/sample/city.list.json.gz
+        :param days: number of days
+        :return: message for Telegram
+        """
         city_info, forecast = self.load_forecast(city_id, days, '/daily')
         data = []
         for weather in forecast:
@@ -99,57 +117,11 @@ class CommandWeather(CommandBase):
             data[0]['emoji'])
 
         message += '\n'.join([
-                                 '{} – {}°С {} {}'.format(weather['time'], weather['temp'], weather['emoji'], weather['desc'])
-                                 for weather in data
-                                 ])
+            '{} – {}°С {} {}'.format(weather['time'], weather['temp'], weather['emoji'], weather['desc'])
+            for weather in data
+        ])
 
         return message
-
-    def get_current_weather(self, id):
-        try:
-            response = requests.get("http://api.openweathermap.org/data/2.5/weather?id={}&appid={}".format(
-                id,
-                OPENWEATHER_API_KEY
-            ))
-
-            if response.status_code == 200:
-                data = response.json()
-                city = data['name']
-                temp = int(float(data['main']['temp']) - 273.15)
-                weather = data['weather'][0]['description']
-                humidity = int(data['main']['humidity'])
-                return temp, weather, humidity, city
-
-        except Exception as e:
-            self.sdk.log("Error: {}".format(e))
-        return 0
-
-    def get_forecast(self, id, period):
-        try:
-            response = requests.get(
-                "http://api.openweathermap.org/data/2.5/forecast/daily?id={}&appid={}&cnt={}".format(
-                    id,
-                    OPENWEATHER_API_KEY,
-                    period
-                ))
-
-            if response.status_code == 200:
-                data = response.json()
-                city = data['city']['name']
-
-                forecast = []
-                for weather in data['list']:
-                    day = {
-                        'temp': int(float(weather['temp']['day']) - 273.15),
-                        'weather': weather['weather'][0]['description'],
-                        'humidity': weather['humidity'],
-                    }
-                    forecast.append(day)
-                return city, forecast
-
-        except Exception as e:
-            self.sdk.log("Error: {}".format(e))
-        return 0
 
     async def __call__(self, payload):
         self.sdk.log("/weather handler fired with payload {}".format(payload))
@@ -161,21 +133,12 @@ class CommandWeather(CommandBase):
         else:
 
             if payload['command'] == "weather":
-                # temp, weather, humidity, city = self.get_current_weather(registered_city['city_id'])
-                # if temp:
-                #     message = "Temperature for {} is {}°С\n{}, humidity is {}%".format(city, temp, weather, humidity)
-                # else:
-                #     message = "API error."
                 message = self.get_daily_forecast(registered_city['city_id'])
             else:
                 period = 3
                 if "rain10" in payload['command']:
                     period = 10
                 message = self.get_weekly_forecast(registered_city['city_id'], period)
-                # city, forecast = self.get_forecast(registered_city['city_id'], period)
-                # message = "Forecast for {} days ({}) is:\n".format(period, city)
-                # for day in forecast:
-                #     message += "{}°С, {}, humidity is {}%\n".format(day['temp'], day['weather'], day['humidity'])
 
         await self.sdk.send_text_to_chat(
             payload["chat"],

@@ -25,7 +25,6 @@ class Weather:
         ])
 
         self.sdk.set_routes([])
-
         self.sdk.start_server()
 
 
