@@ -8,7 +8,7 @@ class CommandCity(CommandBase):
         self.sdk.log("/city handler fired with payload {}".format(payload))
 
         if not payload['params']:
-            message = "Enter city ID\n\nExample: '/city 498817'"
+            message = "Enter city ID\n\nExample: /city 498817"
         else:
             city_id = int(payload['params'])
 
