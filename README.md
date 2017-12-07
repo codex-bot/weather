@@ -4,7 +4,9 @@ This article is about new @codex_bot application development. Throughout this gu
 
 For simplicity we use our modern SDK for Python (**link**). We also provide instructions how to run your own production-ready @codex_bot server.
 
-Before start you need to run @codex_bot Core (read [Developer's Guide](https://github.com/codex-team/codex.bot/wiki/Developer's-Guide)) or use our [@codex_bot](https://t.me/codex_bot)
+Before start you need to run [@codex_bot Core](https://github.com/codex-team/codex.bot) (read [Developer's Guide](https://github.com/codex-team/codex.bot/wiki/Developer's-Guide)) or use our [@codex_bot](https://t.me/codex_bot)
+
+If you are wondering, we have a lot of other useful @codex_bot [applications](https://github.com/codex-bot) to play with. Check our [landing](https://ifmo.su/bot) for the further information.
 
 ## Install necessary tools
 
@@ -72,7 +74,7 @@ class CommandCities(CommandBase):
             "...message here..."
         )
 ```
-When user inputs `/cities` command in the telegram chat with bot, you'll receive a debug message with the payload into you terminal:
+When user inputs `/cities` command in the telegram chat with bot, you'll receive a debug message with the payload into your terminal:
 `
 logging.py          :17                  debug() 	 /cities handler fired with payload {'command': 'cities', 'params': '', 'chat': 'RXRI6S0N', 'user': 'VZXTDQ44'}
 `
