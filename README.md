@@ -1,8 +1,8 @@
-## How to create a new application for @codex_bot platform
+## How to create a new application for [@codex_bot](https://github.com/codex-team/codex.bot) platform
 
 This article is about new @codex_bot application development. Throughout this guide we build an application that can provide weather forecast for different periods of time.
 
-For simplicity we use our modern SDK for Python (**link**). We also provide instructions how to run your own production-ready @codex_bot server.
+For simplicity we use our modern [SDK for Python](https://github.com/codex-bot/sdk-python). We also provide instructions how to run your own production-ready @codex_bot server.
 
 Before start you need to run [@codex_bot Core](https://github.com/codex-team/codex.bot) (read [Developer's Guide](https://github.com/codex-team/codex.bot/wiki/Developer's-Guide)) or use our [@codex_bot](https://t.me/codex_bot)
 
@@ -16,6 +16,7 @@ If you are wondering, we have a lot of other useful @codex_bot [applications](ht
 4. Initialize a virtual environment with `virtualenv venv -p python3`.
 
 ### Docker support
+
 You can skip this step if you don't need to run MongoDB in a Docker.
 1. Create working directory `mkdir mongo`
 2. Run `docker run -v mongo:/data/db -p 27017:27017 -d mongo`
@@ -45,7 +46,8 @@ In *main.py* there is an SDK initialization with values from the configuration f
 `self.sdk = CodexBot(APPLICATION_NAME, SERVER['host'], SERVER['port'], db_config=DB, token=APPLICATION_TOKEN)`
 
 After that, method **register_commands** tells Core which commands should be redirected to your application (note: this commands might be unique!).
-```
+
+```python
 self.sdk.register_commands([
     ('weather_help', 'help', CommandHelp(self.sdk)),
     ('weather', 'weather', CommandWeather(self.sdk)),
@@ -57,7 +59,8 @@ self.sdk.register_commands([
 ```
 
 Handlers for each command are defined in **commands** directory. You can find imports in the beginning of the main.py script:
-```
+
+```python
 from commands.help import CommandHelp
 from commands.cities import CommandCities
 from commands.city import CommandCity
@@ -65,7 +68,8 @@ from commands.weather import CommandWeather
 ```
 
 Our SDK invokes **__init__** method with **payload** parameter. Watch an example in the **commangs/cities.py** file:
-```
+
+```python
 class CommandCities(CommandBase):
     async def __call__(self, payload):
         self.sdk.log("/cities handler fired with payload {}".format(payload))
@@ -75,11 +79,13 @@ class CommandCities(CommandBase):
         )
 ```
 When user inputs `/cities` command in the telegram chat with bot, you'll receive a debug message with the payload into your terminal:
-`
+
+```python
 logging.py          :17                  debug() 	 /cities handler fired with payload {'command': 'cities', 'params': '', 'chat': 'RXRI6S0N', 'user': 'VZXTDQ44'}
-`
+```
 
 #### Usage
+
 - `/city <CITY_ID>` — setting up your location
 - `/cities` — view cities list
 - `/weather` — get current weather conditions
@@ -88,9 +94,8 @@ logging.py          :17                  debug() 	 /cities handler fired with pa
 
 ## Issues and improvements
 
-Ask a question or report a bug on the [create issue page](https://github.com/codex-bot/weather/issues/new).
-
-Know how to improve platform? [Fork it](https://github.com/codex-bot/weather) and send a pull request.
+- Ask a question or report a bug on the [create issue page](https://github.com/codex-team/codex.bot/issues/new).
+- Know how to improve platform? [Fork it](https://github.com/codex-team/codex.bot) and send a pull request.
 
 ## About CodeX
 
